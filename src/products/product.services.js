@@ -1,9 +1,20 @@
 import {
+  CreateNewProducts,
   DeletedProduct,
   findProductById,
   findProducts,
   UpdatedProduct,
 } from "./product.repository.js";
+
+export const AddNewProducst = async (productData) => {
+  try {
+    const product = await CreateNewProducts(productData);
+    if (!product || product.length < 0) throw new Error("produk harus di isi");
+    return product;
+  } catch (error) {
+    throw new Error(error.message || "produk harus di isi 2");
+  }
+};
 
 export const getAllProducts = async () => {
   const products = await findProducts();
