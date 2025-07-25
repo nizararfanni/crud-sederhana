@@ -6,13 +6,19 @@ import {
   getProductById,
   GetUpdateProduct,
 } from "./product.services.js";
+import upload from "../middleware/multer.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("images"), async (req, res) => {
   //abil data dr body
   const productData = req.body;
-  const newProducts = await AddNewProducst(productData);
+  console.log("inimah", req.file);
+
+  //ambi path name photos
+  const images = req.file.filename;
+
+  const newProducts = await AddNewProducst(productData, images);
   console.log(newProducts);
   return res.json({ message: "producst has been created", data: newProducts });
 });
@@ -27,7 +33,7 @@ router.get("/:id", async (req, res) => {
   const product = await getProductById(parseInt(id));
   return res.json({
     message: `ini product yg anda minta sesuai ${id}`,
-    product,
+    data: product,
   });
 });
 

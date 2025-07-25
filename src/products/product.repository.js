@@ -1,14 +1,14 @@
 import { prisma } from "../db/index.js";
 
-export const CreateNewProducts = async (productData) => {
+export const CreateNewProducts = async (productData, images) => {
   const product = await prisma.products.create({
     data: {
       name: productData.name,
       email: productData.email,
-      images: productData.images,
-      price: productData.price,
+      images: images,
+      price: Number(productData.price),
       description: productData.description,
-      stock: productData.stock,
+      stock: Number(productData.stock),
     },
   });
   return product;

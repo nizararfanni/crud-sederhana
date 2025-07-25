@@ -6,10 +6,10 @@ import {
   UpdatedProduct,
 } from "./product.repository.js";
 
-export const AddNewProducst = async (productData) => {
+export const AddNewProducst = async (productData,images) => {
   try {
-    const product = await CreateNewProducts(productData);
-    if (!product || product.length < 0) throw new Error("produk harus di isi");
+    const product = await CreateNewProducts(productData,images);
+   if (!product) throw new Error("Gagal membuat produk: data tidak valid");
     return product;
   } catch (error) {
     throw new Error(error.message || "produk harus di isi 2");
