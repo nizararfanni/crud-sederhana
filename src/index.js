@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import midtransClient from "midtrans-client";
 import router from "./products/product.controller.js";
+import multer from "multer";
 
 dotenv.config();
 const app = express();
@@ -11,10 +12,11 @@ const port = 4000;
 // middleware
 app.use(
   cors({
-    origin: "http://localhost:4000",
+    origin: "http://localhost:5173",
   })
 );
 app.use(express.json());
+app.use("/images", express.static("public/images"));
 app.use("/products", router);
 
 //inisialisasi snap midtrans
@@ -56,6 +58,18 @@ app.post("/token", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: error.message });
   }
+});
+
+//middleware error
+app.use((err, req, res, next) => {
+  console.log(err);
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({ error: err.message });
+  } else if (err) {
+    return res.status(400).json({ error: err.message });
+  }
+
+  next();
 });
 
 //jalankan sercer
