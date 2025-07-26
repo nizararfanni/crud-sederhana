@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import midtransClient from "midtrans-client";
-import router from "./products/product.controller.js";
+import productRouter from "./products/product.controller.js";
+import userRouter from "./users/users.controller.js";
 import multer from "multer";
 
 dotenv.config();
@@ -17,7 +18,8 @@ app.use(
 );
 app.use(express.json());
 app.use("/images", express.static("public/images"));
-app.use("/products", router);
+app.use("/products", productRouter);
+app.use("/users", userRouter);
 
 //inisialisasi snap midtrans
 const snap = new midtransClient.Snap({
