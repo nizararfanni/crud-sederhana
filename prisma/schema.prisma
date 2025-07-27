@@ -18,10 +18,28 @@ model products {
   id  Int  @id @default(autoincrement())
   name String
   email String
-  description String?
+  description String? @db.LongText
   price Int
   stock Int
-  images String?   
+  images String?   @db.Text
   createdAt DateTime @default(now())
   editededAt DateTime @default(now())
+  rate Int @default(0) 
+  count Int @default(0)
+  quantity Int @default(1)
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      Role     @default(BUYER)
+  createdAt DateTime @default(now())
+  username String
+}
+
+//peran model cuma bisa buyer/seler
+enum Role {
+  BUYER 
+  SELLER
 }
