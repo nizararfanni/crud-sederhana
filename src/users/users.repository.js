@@ -41,3 +41,12 @@ export const editUser = async (id, updateUser) => {
   });
   return user;
 };
+
+export const deletedUser = async (id) => {
+  const user = await prisma.user.delete({
+    where: {
+      id,
+    },
+  });
+  return user;
+};

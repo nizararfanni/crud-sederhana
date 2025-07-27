@@ -2,6 +2,7 @@ import express from "express";
 import {
   CreateUser,
   GetAllUser,
+  GetDeteltedUser,
   GetEditUser,
   GetUserById,
 } from "./users.services.js";
@@ -40,6 +41,15 @@ router.patch("/:id", async (req, res) => {
 
   const user = await GetEditUser(Number(id), updateUser);
   return res.status(200).json({ message: "berhasil update data", data: user });
+});
+
+router.delete("/:id", async (req, res) => {
+  //ambil id dari parasm
+  const id = req.params.id;
+  const user = await GetDeteltedUser(Number(id));
+  return res
+    .status(200)
+    .json({ message: "user berhasil di hapus", data: user });
 });
 
 export default router;

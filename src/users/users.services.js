@@ -1,4 +1,10 @@
-import { AllUser, editUser, newUsers, UserById } from "./users.repository.js";
+import {
+  AllUser,
+  deletedUser,
+  editUser,
+  newUsers,
+  UserById,
+} from "./users.repository.js";
 import bcrypt from "bcrypt";
 
 export const CreateUser = async (userData) => {
@@ -40,5 +46,15 @@ export const GetEditUser = async (id, updateUser) => {
     return user;
   } catch (error) {
     throw new Error(error.message);
+  }
+};
+
+export const GetDeteltedUser = async (id) => {
+  try {
+    const user = await deletedUser(id);
+    if (!user) throw new Error("user tidak di temukan");
+    return user;
+  } catch (error) {
+    throw new Error("user tidak di temukan" || error.message );
   }
 };
