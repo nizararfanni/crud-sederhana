@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import midtransClient from "midtrans-client";
 import productRouter from "./products/product.controller.js";
 import userRouter from "./users/users.controller.js";
+import authRouter from "./auth/auth.controller.js";
 import multer from "multer";
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/images", express.static("public/images"));
 app.use("/products", productRouter);
 app.use("/users", userRouter);
+app.use("/auth", authRouter);
 
 //inisialisasi snap midtrans
 const snap = new midtransClient.Snap({
@@ -69,6 +71,8 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ error: err.message });
   } else if (err) {
     return res.status(400).json({ error: err.message });
+  } else {
+    return res.status(err.statusCode || 500).json({ message: err.message });
   }
 
   next();
