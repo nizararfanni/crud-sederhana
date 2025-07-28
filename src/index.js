@@ -6,6 +6,7 @@ import productRouter from "./products/product.controller.js";
 import userRouter from "./users/users.controller.js";
 import authRouter from "./auth/auth.controller.js";
 import multer from "multer";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
@@ -18,6 +19,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cookieParser());
 app.use("/images", express.static("public/images"));
 app.use("/products", productRouter);
 app.use("/users", userRouter);
