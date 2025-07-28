@@ -1,5 +1,11 @@
 import express from "express";
-import { getLoginUser, getUserRegister } from "./auth.services.js";
+import {
+  getLoginUser,
+  getUserRegister,
+  getRefreshToken,
+} from "./auth.services.js";
+import { verifyToken } from "../middleware/verivyToken.js";
+
 
 const router = express.Router();
 
@@ -14,21 +20,37 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-try {
-  //ambil body isian
-  const userData = req.body;
+  // console.log("ACCESS_TOKEN:", process.env.ACCESS_TOKEN);
+  try {
+    //ambil body isian
+    const userData = req.body;
 
-  const user = await getLoginUser(userData);
-  console.log("apa ini", user);
+    const user = await getLoginUser(userData);
+    console.log("apa ini", user);
+
+    res.cookie("refreshToken", user.refreshToken, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      message: "login berhsil",
+      data: user.user,
+      token: user.accessToken,
+    });
+  } catch (error) {
+    throw new Error(error.message || "something wrond");
+  }
+});
+
+router.post("/refreshToken", async (req, res) => {
+  const { refreshToken } = req.body;
+  const token = await getRefreshToken(refreshToken);
+  // console.log("ini isian token", token);
 
   return res.status(200).json({
-    message: "login berhsil",
-    data: user.user,
-    token: user.token,
+    accesToken: token,
   });
-} catch (error) {
-  throw new Error(error.message || "something wrond")
-}
 });
 
 export default router;
