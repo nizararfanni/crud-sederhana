@@ -25,7 +25,7 @@ export const GetUserById = async (id) => {
     if (!user) throw new Error("User tidak ditemukan");
     return user;
   } catch (error) {
-    throw new Error("something wrong" || error.message);
+    throw new Error( error.message || "something wrong" );
   }
 };
 

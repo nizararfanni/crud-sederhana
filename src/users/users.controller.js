@@ -6,6 +6,7 @@ import {
   GetEditUser,
   GetUserById,
 } from "./users.services.js";
+import { verifyToken } from "../middleware/verivyToken.js";
 
 const router = express.Router();
 
@@ -21,7 +22,13 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
+  
+  // if (req.user.role !== "BUYER") {
+  //   return res.json({
+  //     message: "hanay boleh admin saja",
+  //   });
+  // }
   //ambil data id dari req params
   const id = req.params.id;
   const user = await GetUserById(Number(id));
