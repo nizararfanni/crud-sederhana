@@ -4,7 +4,7 @@ import {
   GetAllUser,
   GetDeteltedUser,
   GetEditUser,
-  GetUserById,
+  GetUserProfile,
 } from "./users.services.js";
 import { verifyToken } from "../middleware/verivyToken.js";
 
@@ -22,20 +22,14 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.get("/:id", verifyToken, async (req, res) => {
-  
-  // if (req.user.role !== "BUYER") {
-  //   return res.json({
-  //     message: "hanay boleh admin saja",
-  //   });
-  // }
-  //ambil data id dari req params
-  const id = req.params.id;
-  const user = await GetUserById(Number(id));
+router.get("/profile", verifyToken, async (req, res) => {
+  //ambil injekan req di verivy token
+  const userId = req.user.id;
+  const user = await GetUserProfile(Number(userId));
   return res.status(200).json({ user });
 });
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   const users = await GetAllUser();
   return res.status(200).json({ data: users });
 });

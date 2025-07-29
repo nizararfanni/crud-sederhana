@@ -3,7 +3,7 @@ import {
   deletedUser,
   editUser,
   newUsers,
-  UserById,
+  UserProfile,
 } from "./users.repository.js";
 import bcrypt from "bcrypt";
 
@@ -19,13 +19,13 @@ export const CreateUser = async (userData) => {
   }
 };
 
-export const GetUserById = async (id) => {
+export const GetUserProfile = async (userId) => {
   try {
-    const user = await UserById(id);
+    const user = await UserProfile(userId);
     if (!user) throw new Error("User tidak ditemukan");
     return user;
   } catch (error) {
-    throw new Error( error.message || "something wrong" );
+    throw new Error(error.message || "something wrong");
   }
 };
 
@@ -55,6 +55,6 @@ export const GetDeteltedUser = async (id) => {
     if (!user) throw new Error("user tidak di temukan");
     return user;
   } catch (error) {
-    throw new Error("user tidak di temukan" || error.message );
+    throw new Error("user tidak di temukan" || error.message);
   }
 };
