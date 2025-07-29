@@ -2,21 +2,25 @@ import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  // console.log("ini headers", req.headers);
-  const token = authHeader && authHeader.split(" ")[1];
+  const token = authHeader && authHeader?.split(" ")[1];
+  // console.log("token", token);
+  
   if (!token)
-    return res.sendStatus(401).json({
+    return res.status(401).json({
       message: "unauthrozation",
     });
 
   //verivfy token
   try {
     const decode = jwt.verify(token, process.env.ACCESS_TOKEN);
+    console.log("isian decode", decode);
     req.user = decode;
-    console.log("isian decode",decode);
 
     next();
   } catch (error) {
-    return res.status(403).json({ error: "Token tidak valid atau expired" });
+    console.error("JWT Verify Error:", error.message);
+    return res.status(403).json({ error: error.message });
+
+
   }
 };
