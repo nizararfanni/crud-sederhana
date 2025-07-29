@@ -6,7 +6,6 @@ import {
 } from "./auth.services.js";
 import { verifyToken } from "../middleware/verivyToken.js";
 
-
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -44,12 +43,16 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/refreshToken", async (req, res) => {
-  const { refreshToken } = req.body;
-  const token = await getRefreshToken(refreshToken);
-  // console.log("ini isian token", token);
+  //ambil refreshtoken dari headers
+  const token = req.headers["authorization"];
+  const refreshToken = token.split(" ")[1];
+  // console.log("ini refreshtoken", refreshToken);
+
+  //genrate accestoken baru berdasar refreshtoken
+  const user = await getRefreshToken(refreshToken);
 
   return res.status(200).json({
-    accesToken: token,
+    user: user.accessToken,
   });
 });
 

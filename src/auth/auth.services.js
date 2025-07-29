@@ -1,4 +1,5 @@
 import {
+  findToken,
   findUserById,
   loginUser,
   RefreshToken,
@@ -29,10 +30,9 @@ export const getLoginUser = async ({ email, password }) => {
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) throw new Error("Email atau password salah");
 
-    //genreat e accestoken dan refreshtoken pakw jwt
     const payload = { id: user.id, role: user.role };
     const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN, {
-      expiresIn: "30s",
+      expiresIn: "1m",
     });
     const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN, {
       expiresIn: "1d",
@@ -50,13 +50,15 @@ export const getLoginUser = async ({ email, password }) => {
 
 export const getRefreshToken = async (refreshToken) => {
   try {
+    //ambil refresh token dari database
+    const token = await findToken(refreshToken);
+    // console.log("ini token", token);
+    if (!token) throw new Error("Refresh token tidak valid");
+
+    const user = token.user;
     // Verifikasi refresh token
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN);
-    console.log(decoded);
-
-    // Ambil user dari DB berdasarkan ID di token
-    const user = await findUserById(decoded.id);
-    if (!user) throw new Error("User tidak ditemukan");
+    // console.log(decoded);
 
     // Generate access token baru
     const payload = { id: user.id, role: user.role };
@@ -66,6 +68,6 @@ export const getRefreshToken = async (refreshToken) => {
 
     return { accessToken };
   } catch (error) {
-    throw new Error(error.message || "Refresh token tidak valid atau expired");
+    throw new Error(error.message);
   }
 };
