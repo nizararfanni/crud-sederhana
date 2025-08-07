@@ -36,6 +36,18 @@ model User {
   role      Role     @default(BUYER)
   createdAt DateTime @default(now())
   username String
+  token RefreshToken?
+}
+
+model RefreshToken {
+  id         String   @id @default(uuid())
+  token       String   @unique
+  userId      Int @unique
+  user        User     @relation(fields: [userId],references: [id])
+  revoked     Boolean  @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 //peran model cuma bisa buyer/seler
